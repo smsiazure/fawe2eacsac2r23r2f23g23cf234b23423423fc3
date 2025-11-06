@@ -1,0 +1,85 @@
+<style>
+  body, html {
+    font-family: "Varela Round", sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .tabs-container1 {
+    display: flex;
+  }
+
+  .tab1 {
+    padding: 5px 10px;
+    width: 50vw;
+    cursor: pointer;
+    color: white;
+    background-color: #545454;
+    border-right: 0;
+    text-align: center;
+  }
+
+  .tab1.active {
+    background-color: #ffffff;
+    color: #545454;
+    font-weight: bold;
+  }
+
+  .frame-right {
+    display: none;
+    width: 100%;
+    height: calc(100vh - 30px);
+    border: none;
+  }
+
+  .frame-right.active {
+    display: block;
+  }
+</style>
+
+<div class="tabs-container1" id="tabs-container1">
+  <div class="tab1 active" onclick="openRightFrame(0)">Weather</div>
+  <div class="tab1" onclick="openRightFrame(1)">Traffic</div>
+</div>
+
+<!-- Weather Frame -->
+<iframe
+  class="frame-right active"
+  id="weatherFrame"
+  loading="lazy"
+  src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=3&overlay=wind&product=ecmwf&level=surface&lat=-3.162&lon=121.641&detailLat=12.555&detailLon=121.641&detail=true">
+</iframe>
+
+<!-- Traffic Frame -->
+<iframe
+  class="frame-right"
+  id="trafficFrame"
+  loading="lazy"
+  src="https://embed.waze.com/iframe?zoom=14&lat=14.484366&lon=121.044874&ct=livemap">
+</iframe>
+
+<script>
+  function openRightFrame(index) {
+    const tabs = document.querySelectorAll('.tab1');
+    const frames = document.querySelectorAll('.frame-right');
+
+    tabs.forEach((tab, i) => {
+      tab.classList.toggle('active', i === index);
+      frames[i].classList.toggle('active', i === index);
+    });
+  }
+
+  // Refresh active frame on right-click
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    const activeFrame = document.querySelector('.frame-right.active');
+    if (activeFrame) {
+      const currentSrc = activeFrame.src;
+      activeFrame.src = ''; // force reload
+      activeFrame.src = currentSrc;
+    }
+  });
+</script>
