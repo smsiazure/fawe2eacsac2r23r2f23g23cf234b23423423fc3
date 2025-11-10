@@ -111,9 +111,9 @@ body {
 #date-time {
     padding: 0;
   }
-  .floating-buttons {
+  .floating-buttons,
+  .floating-buttons1 {
     position: fixed;
-    bottom: 40px;
     right: 40px;
     display: flex;
     flex-direction: column;
@@ -121,7 +121,14 @@ body {
     z-index: 9900;
   }
 
-  /* Main Floating Button */
+  .floating-buttons {
+    bottom: 40px;
+  }
+
+  .floating-buttons1 {
+    bottom: 110px; /* offset to not overlap */
+  }
+
   .button-menu {
     cursor: pointer;
     background-color: #333;
@@ -144,12 +151,11 @@ body {
     transform: scale(0.96);
   }
 
-  /* Overlay */
   .overlay-frame {
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none; /* hidden by default */
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 9999;
@@ -163,8 +169,7 @@ body {
     gap: 10px;
   }
 
-  /* Buttons inside overlay */
-  .close-btn, .refresh-btn {
+  .close-btn {
     font-size: 22px;
     border: none;
     border-radius: 50%;
@@ -175,29 +180,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .close-btn {
     background: #ff4d4d;
-  }
-
-  .refresh-btn {
-    background: #4caf50;
   }
 
   .close-btn:hover {
     background: #cc0000;
   }
 
-  .refresh-btn:hover {
-    background: #388e3c;
-  }
-
-  /* Iframe */
-  #overlay-iframe {
+  #overlay-iframe,
+  #overlay-iframe1 {
     width: 100vw;
     height: 100vh;
     border: none;
-    border-radius: 10px;
     background: white;
   }
