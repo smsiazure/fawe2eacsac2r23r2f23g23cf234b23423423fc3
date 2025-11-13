@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mara Chatbot (Typing Effect)</title>
+<title>Mara Chatbot (Manual Menu)</title>
 <style>
   body {
     font-family: "Segoe UI", sans-serif;
@@ -13,6 +13,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font-size: 1.2rem;
   }
   #chat {
     flex: 1;
@@ -38,6 +39,12 @@
     color: white;
     align-self: flex-end;
   }
+  .typing {
+    background: #e7f1ff;
+    align-self: flex-start;
+    opacity: 0.7;
+    font-style: italic;
+  }
   #inputArea {
     display: flex;
     padding: 10px;
@@ -59,85 +66,215 @@
     border-radius: 5px;
     cursor: pointer;
   }
+
+  a {
+    color: #1a73e8;
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
 <div id="chat"></div>
 <div id="inputArea">
-  <input type="text" id="userInput" placeholder="Enter number..." autofocus>
+  <input type="number" id="userInput" placeholder="Enter number..." autofocus>
   <button onclick="sendMsg()">Send</button>
 </div>
 
 <script>
-// ⚙️ Auto-generate compact 20×20×20 structure
-function generateMenu(level = 1, prefix = "") {
-  const menu = {
-    title: (prefix === "" ? "🏠 MAIN MENU" : `📋 Option ${prefix} Menu`),
-    options: {},
-    branches: {}
-  };
+const chatBox = document.getElementById("chat");
 
-  for (let i = 1; i <= 20; i++) {
-    const label = prefix ? `${prefix}.${i}` : `${i}`;
-    menu.options[i] = `Option ${label}`;
-    if (level < 3) {
-      menu.branches[i] = generateMenu(level + 1, label);
-    } else {
-      menu.branches[i] = {
-        title: `📘 Option ${label}`,
-        message: `Details for Option ${label}\n\n99. Back\n0. Main Menu`
-      };
-    }
-  }
-  return menu;
+// 🔹 Simulated typing delay based on word count
+function getTypingDelay(wordCount) {
+  if (wordCount <= 50) return 800;
+  if (wordCount <= 100) return 1200;
+  if (wordCount <= 150) return 1800;
+  return 2500;
 }
 
-// 🧠 Create nested menu tree
-const menu = { main: generateMenu() };
+// 🔹 Display "Bot is typing..." then show message
+function simulateBotResponse(text, isHTML = false) {
+  const wordCount = text.replace(/<[^>]*>/g, "").trim().split(/\s+/).length;
+  const delay = getTypingDelay(wordCount);
 
-// 💬 Chat Logic
+  const typingMsg = document.createElement("div");
+  typingMsg.className = "msg bot typing";
+  typingMsg.textContent = "🤖 Bot is typing...";
+  chatBox.appendChild(typingMsg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  setTimeout(() => {
+    typingMsg.remove();
+    appendMessage("bot", text, isHTML);
+  }, delay);
+}
+
+// 🔹 Append message to chat
+function appendMessage(sender, message, isHTML = false) {
+  const msg = document.createElement("div");
+  msg.className = "msg " + sender;
+  if (isHTML) msg.innerHTML = message;
+  else msg.textContent = message;
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// --------------------- MENU DATA ---------------------
+const menu = {
+  main: {
+    title: "Hi! I'm Ezura, at your service. Kindly input the number based on your inquiry:",
+    options: {
+      1: "Daily Cleaning Tasks",
+      2: "Inventory Management",
+      3: "Maintenance Requests",
+      4: "Shift Schedule",
+      5: "Reports & Logs",
+      6: "Training & Guidelines",
+      7: "Help / Contacts",
+      8: "Emergency Contacts"
+    },
+    branches: {
+      1: {
+        title: "🧹 Daily Cleaning Tasks",
+        options: { 1: "Guest Rooms", 2: "Public Areas", 3: "Restrooms" },
+        branches: {
+          1: { message: "Clean guest rooms:\n- Make beds\n- Replace linens\n- Vacuum floors\n\n99. Back\n0. Main Menu" },
+          2: { message: "Clean public areas:\n- Lobby\n- Hallways\n- Elevators\n\n99. Back\n0. Main Menu" },
+          3: { message: "Clean restrooms:\n- Sanitize sinks & toilets\n- Refill supplies\n- Sweep & mop floors\n\n99. Back\n0. Main Menu" }
+        }
+      },
+      2: {
+        title: "📦 Inventory Management",
+        options: { 1: "Check Stock", 2: "Request Supplies" },
+        branches: {
+          1: { message: "Current stock levels:\n- Linens\n- Toiletries\n- Cleaning Chemicals\n\n99. Back\n0. Main Menu" },
+          2: { message: 'Request new supplies:\n<a href="https://intranet/hk/supplies-request" target="_blank">Submit Request</a>\n\n99. Back\n0. Main Menu' }
+        }
+      },
+      3: {
+        title: "🛠 Maintenance Requests",
+        options: { 1: "Report Issue", 2: "View Status" },
+        branches: {
+          1: { message: 'Report an issue:\n<a href="https://intranet/hk/maintenance" target="_blank">Submit Maintenance Request</a>\n\n99. Back\n0. Main Menu' },
+          2: { message: "View status of reported issues:\n- Pending\n- In Progress\n- Completed\n\n99. Back\n0. Main Menu" }
+        }
+      },
+      4: {
+        title: "⏰ Shift Schedule",
+        options: { 1: "View My Schedule", 2: "Swap Shifts" },
+        branches: {
+          1: { message: 'View schedule:\n<a href="https://intranet/hk/schedule" target="_blank">My Shifts</a>\n\n99. Back\n0. Main Menu' },
+          2: { message: "Swap shifts:\n- Request swap with colleague\n- Supervisor approval required\n\n99. Back\n0. Main Menu" }
+        }
+      },
+      5: {
+        title: "📄 Reports & Logs",
+        options: { 1: "Daily Cleaning Logs", 2: "Incident Reports" },
+        branches: {
+          1: { message: 'Access daily cleaning logs:\n<a href="https://intranet/hk/logs" target="_blank">View Logs</a>\n\n99. Back\n0. Main Menu' },
+          2: { message: 'Submit an incident report:\n<a href="https://intranet/hk/incidents" target="_blank">Report Incident</a>\n\n99. Back\n0. Main Menu' }
+        }
+      },
+      6: {
+        title: "📚 Training & Guidelines",
+        options: { 1: "Safety Guidelines", 2: "Training Videos" },
+        branches: {
+          1: { message: 'Safety Guidelines:\n<a href="https://intranet/hk/safety" target="_blank">Read Guidelines</a>\n\n99. Back\n0. Main Menu' },
+          2: { message: 'Training Videos:\n<a href="https://intranet/hk/training" target="_blank">Watch Videos</a>\n\n99. Back\n0. Main Menu' }
+        }
+      },
+      7: {
+        title: "📞 Help / Contacts",
+        options: { 1: "Supervisor Contact", 2: "IT Support", 3: "HR / Admin" },
+        branches: {
+          1: { message: 'Contact Supervisor:\n<a href="mailto:supervisor@hotel.com">Email Supervisor</a>\n\n99. Back\n0. Main Menu' },
+          2: { message: 'Contact IT Support:\n<a href="mailto:itsupport@hotel.com">Email IT Support</a>\n\n99. Back\n0. Main Menu' },
+          3: { message: 'Contact HR / Admin:\n<a href="mailto:hr@hotel.com">Email HR</a>\n\n99. Back\n0. Main Menu' }
+        }
+      },
+      8: "Emergency Contacts"
+    },
+    branches: {
+      8: {
+        title: `<b>📞 National Emergency Hotlines</b>
+- Emergency Hotline: <a href="tel:911">911</a>
+- PNP (Police): <a href="tel:117">117</a> or <a href="tel:+6287220650">(02) 8722-0650</a>
+- BFP (Fire): <a href="tel:+6284260219">(02) 8426-0219</a>
+- MMDA Metrobase: <a href="tel:136">136</a>
+- Red Cross: <a href="tel:143">143</a> or <a href="tel:+6287902300">(02) 8790-2300</a>`,
+
+        options: {
+          1: "Parañaque City Emergency Services",
+          2: "Hospitals & Medical Facilities",
+          3: "Utilities & Other Emergency Contacts", 
+        },
+        branches: {
+          1: { message: `<b>Parañaque City Emergency Services</b>
+- City Hall: <a href="tel:+6288207783">(02) 8820-7783</a>
+- Police Station: <a href="tel:+6285715151">(02) 8571-5151</a>
+- Fire Station: <a href="tel:+6284219819">(02) 8421-9819</a>
+- DRRMO: <a href="tel:09613101333">0961-310-1333</a>
+- Barangay BF Homes: <a href="tel:+6288263243">(02) 8826-3243</a>
+- Barangay Don Bosco: <a href="tel:+6288263535">(02) 8826-3535</a>
+- Barangay Moonwalk: <a href="tel:+6288258870">(02) 8825-8870</a>
+- Barangay San Antonio: <a href="tel:+6288268705">(02) 8826-8705</a>
+- Barangay Sun Valley: <a href="tel:+6288253514">(02) 8825-3514</a>
+- Barangay Baclaran: <a href="tel:+6288253042">(02) 8825-3042</a>
+- Barangay San Dionisio: <a href="tel:+6288263532">(02) 8826-3532</a>
+- Barangay Tambo: <a href="tel:+6288268897">(02) 8826-8897</a>
+- Barangay Sto. Niño: <a href="tel:+6288263601">(02) 8826-3601</a>
+- Barangay Merville: <a href="tel:+6288263529">(02) 8826-3529</a>
+- Barangay Vitalez: <a href="tel:+6288263530">(02) 8826-3530</a>
+- Barangay Marcelo Green: <a href="tel:+6288263540">(02) 8826-3540</a>
+- Barangay San Martin de Porres: <a href="tel:+6288263542">(02) 8826-3542</a>
+- Barangay Don Galo: <a href="tel:+6288263545">(02) 8826-3545</a>
+
+99. Back
+0. Main Menu`, isHTML: true },
+          2: { message: `<b>Hospitals & Medical Facilities</b>
+- Ospital ng Parañaque I: <a href="tel:+6288263511">(02) 8826-3511</a>
+- Ospital ng Parañaque II: <a href="tel:+6288263512">(02) 8826-3512</a>
+- Medical Center Parañaque: <a href="tel:+6288263720">(02) 8826-3720</a>
+- Unihealth Parañaque Hospital: <a href="tel:+6288269900">(02) 8826-9900</a>
+- Our Lady of Peace Hospital: <a href="tel:+6288266688">(02) 8826-6688</a>
+- PrimeCare Medical Clinic: <a href="tel:+6288265567">(02) 8826-5567</a>
+- South Superhighway Medical Center: <a href="tel:+6288264646">(02) 8826-4646</a>
+- Perpetual Help Medical Center – Las Piñas: <a href="tel:+6288724342">(02) 8872-4342</a>
+- Asian Hospital and Medical Center: <a href="tel:+6287719000">(02) 8771-9000</a>
+- Las Piñas Doctors Hospital: <a href="tel:+6288730661">(02) 8873-0661</a>
+
+99. Back
+0. Main Menu`, isHTML: true },
+          3: { message: `<b>Utilities & Other Emergency Contacts</b>
+- Meralco Hotline: <a href="tel:16211">16211</a>
+- Maynilad Water Hotline: <a href="tel:1626">1626</a>
+- SkyCable Customer Service: <a href="tel:+6233810000">(02) 3381-0000</a>
+- PLDT Hotline: <a href="tel:171">171</a>
+- Globe Hotline: <a href="tel:211">211</a> or <a href="tel:+6277301000">(02) 7730-1000</a>
+- Smart Hotline: <a href="tel:*888">*888</a> or <a href="tel:+6288488878">(02) 8848-8878</a>
+
+99. Back
+0. Main Menu`, isHTML: true }
+        }
+      }
+    }
+  }
+};
+// ---------------- CHAT LOGIC ----------------
 let currentMenu = menu.main;
 let menuStack = [menu.main];
 
-function addMessage(text, sender, typing = false) {
-  const chat = document.getElementById("chat");
-  const msg = document.createElement("div");
-  msg.classList.add("msg", sender);
-  chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
-
-  if (sender === "bot" && typing) {
-    typeEffect(msg, text);
-  } else {
-    msg.textContent = text;
-  }
-}
-
-function typeEffect(element, text) {
-  let index = 0;
-  const speed = 10; // typing speed (lower = faster)
-  const typing = setInterval(() => {
-    element.textContent += text.charAt(index);
-    index++;
-    element.scrollIntoView({ behavior: "smooth", block: "end" });
-    if (index >= text.length) clearInterval(typing);
-  }, speed);
-}
-
 function showMenu(menuNode) {
-  let menuText = `📋 ${menuNode.title}\n\n`;
-  for (const [key, value] of Object.entries(menuNode.options)) {
-    menuText += `${key}. ${value}\n`;
-  }
-  menuText += `\n99. Back\n0. Main Menu`;
-  addMessage(menuText, "bot", true);
+  let text = `🤖 ${menuNode.title}\n\n`;
+  for (const [key, val] of Object.entries(menuNode.options)) text += `${key}. ${val}\n`;
+  text += `\n99. Back\n0. Main Menu`;
+  simulateBotResponse(text, true);
 }
 
 function sendMsg() {
   const input = document.getElementById("userInput");
   const userText = input.value.trim();
   if (!userText) return;
-  addMessage(userText, "user");
+  appendMessage("user", userText);
   input.value = "";
 
   const code = userText.toLowerCase();
@@ -154,22 +291,17 @@ function sendMsg() {
       menuStack.pop();
       currentMenu = menuStack[menuStack.length - 1];
       showMenu(currentMenu);
-    } else {
-      showMenu(menu.main);
-    }
+    } else showMenu(menu.main);
     return;
   }
 
   if (currentMenu.branches && currentMenu.branches[code]) {
     currentMenu = currentMenu.branches[code];
     menuStack.push(currentMenu);
-    if (currentMenu.message) {
-      addMessage(currentMenu.message, "bot", true);
-    } else {
-      showMenu(currentMenu);
-    }
+    if (currentMenu.message) simulateBotResponse(currentMenu.message, true);
+    else showMenu(currentMenu);
   } else {
-    addMessage("❌ Invalid choice. Please try again.", "bot", true);
+    simulateBotResponse("❌ Invalid choice. Please try again.", true);
     showMenu(currentMenu);
   }
 }
