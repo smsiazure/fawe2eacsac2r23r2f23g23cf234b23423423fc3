@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login With Embedded Page</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .box {
+        background: white;
+        padding: 20px;
+        max-width: 450px;
+        margin: 20px auto;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+
+    select, button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+     input {
+        width: 94%;
+        padding: 12px;
+        margin-top: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    button {
+        background: #545454;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #6E9D4E;
+    }
+
+    /* Iframe wrapper */
+    .iframe-wrapper {
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;       /* hide overflowing content */
+        position: relative;
+        height: 80vh;
+        margin-bottom: -50px;   /* pull-down effect */
+    }
+
+    .iframe-wrapper iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 10px;
+    }
+
+    /* Mobile responsive tweaks */
+    @media(max-width: 600px) {
+        .box {
+            width: 90%;
+        }
+        .iframe-wrapper {
+            height: 100vh;
+        }
+    }
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #111827;
+    color: white;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    z-index: 1000;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LOGIN BOX -->
+    <div id="loginBox" class="box">
+        <h2>Login</h2>
+
+        <label>Username</label>
+        <select id="username">
+            <option value="">-- Select User --</option>
+            <option value="ABE ANNALYN">ABE ANNALYN</option>
+            <option value="AGUADO AGUSTIN">AGUADO AGUSTIN</option>
+            <option value="AGUILANDO JOHN DOMINIC">AGUILANDO JOHN DOMINIC</option>
+            <option value="ALCAZAR GLEN PATRICK">ALCAZAR GLEN PATRICK</option>
+            <option value="ALICAWAY VICIENTE">ALICAWAY VICIENTE</option>
+            <option value="ALMARIO HEAVEN">ALMARIO HEAVEN</option>
+            <option value="ALMAZAN VILMA">ALMAZAN VILMA</option>
+            <option value="ALTAREJOS JOCELYN">ALTAREJOS JOCELYN</option>
+            <option value="AMBITON ALVEN">AMBITON ALVEN</option>
+            <option value="AMERICA JERWIN">AMERICA JERWIN</option>
+            <option value="ARBAN ANALIZA">ARBAN ANALIZA</option>
+            <option value="ARCAMO JUMAR">ARCAMO JUMAR</option>
+            <option value="Celestine">Celestine</option>
+        </select>
+
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password">
+
+        <button onclick="login()">Login</button>
+
+        <p id="errorMsg" style="color:red; display:none;">Invalid username or password.</p>
+    </div>
+
+    <!-- CONTENT BOX -->
+    <div id="contentBox" class="box" style="display:none; max-width:100%;">
+        <h3>Welcome, <span id="displayUser"></span></h3>
+
+        <button onclick="logout()" style="background:#6E9D4E; margin-bottom:10px;">Logout</button>
+
+        <div class="iframe-wrapper">
+            <iframe id="embeddedSite" src=""></iframe>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    &copy; 2025 Your Company Name. All Rights Reserved.
+</footer>
+
+<script>
+const USERS = {
+    "ABE ANNALYN":  { password: "56", url: "https://docs.google.com/spreadsheets/d/1KPelpJ1YRQKWGw1qoUvwp7bFSxFIeYi4JwIHFW33MTA/preview?gid=889553704#gid=889553704" },
+    "AGUADO AGUSTIN": { password: "14", url: "https://docs.google.com/spreadsheets/d/1KPelpJ1YRQKWGw1qoUvwp7bFSxFIeYi4JwIHFW33MTA/preview?gid=130807418#gid=130807418" },
+    "AGUILANDO JOHN DOMINIC": { password: "24", url: "https://example.com" },
+    "ALCAZAR GLEN PATRICK": { password: "46", url: "https://www.google.com" },
+    "ALICAWAY VICIENTE": { password: "64", url: "https://www.bing.com" },
+    "ALMARIO HEAVEN": { password: "34", url: "https://example.com" },
+    "ALMAZAN VILMA": { password: "36", url: "https://www.google.com" },
+    "ALTAREJOS JOCELYN": { password: "70", url: "https://www.bing.com" },
+    "AMBITON ALVEN": { password: "28", url: "https://example.com" },
+    "AMERICA JERWIN": { password: "54", url: "https://www.google.com" },
+    "ARBAN ANALIZA": { password: "31", url: "https://www.bing.com" },
+    "ARCAMO JUMAR": { password: "37", url: "https://example.com" },
+    "Celestine": { password: "504", url: "https://docs.google.com" }
+};
+
+window.onload = () => {
+    const lastUser = localStorage.getItem("loggedUser");
+    if (lastUser && USERS[lastUser]) {
+        showContent(lastUser);
+    }
+};
+
+function login() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+    let error = document.getElementById("errorMsg");
+
+    if (USERS[user] && USERS[user].password === pass) {
+        localStorage.setItem("loggedUser", user);
+        showContent(user);
+    } else {
+        error.style.display = "block";
+    }
+}
+
+function showContent(user) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("contentBox").style.display = "block";
+
+    document.getElementById("displayUser").textContent = user;
+    document.getElementById("embeddedSite").src = USERS[user].url;
+}
+
+function logout() {
+    localStorage.removeItem("loggedUser");
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("contentBox").style.display = "none";
+    document.getElementById("password").value = "";
+    document.getElementById("errorMsg").style.display = "none";
+}
+</script>
+
+</body>
+</html>

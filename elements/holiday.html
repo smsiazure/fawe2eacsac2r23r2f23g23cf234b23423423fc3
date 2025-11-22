@@ -1,0 +1,213 @@
+<div id="holidayWidget"></div>
+
+<style>
+    #holidayWidget {
+        font-family: Arial, sans-serif;
+        max-width: 480px;
+        margin: 10px auto;
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    .hw-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .hw-header h2 { margin: 0; font-size: 18px; }
+    .hw-btn {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        margin: 0 3px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .hw-btn:hover { background: #005fcc; }
+    .hw-item {
+        background: #f4f7ff;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 6px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .hw-name {
+        font-weight: bold;
+    }
+    .hw-type {
+        font-size: 11px;
+        color: #444;
+    }
+</style>
+
+<script>
+// Philippines Regular & Special Holidays (Legal + Special Non-working)
+const PH_HOLIDAYS = {
+    2024: [
+        { date: "2024-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2024-02-10", name: "Chinese New Year", type: "Special Non-Working" },
+        { date: "2024-02-25", name: "EDSA People Power Anniversary", type: "Special Non-Working" },
+        { date: "2024-03-28", name: "Maundy Thursday", type: "Regular Holiday" },
+        { date: "2024-03-29", name: "Good Friday", type: "Regular Holiday" },
+        { date: "2024-03-30", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2024-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2024-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2024-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2024-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2024-08-26", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2024-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2024-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2024-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2024-12-08", name: "Feast of the Immaculate Conception", type: "Special Non-Working" },
+        { date: "2024-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2024-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ],
+
+    2025: [
+        { date: "2025-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2025-02-25", name: "EDSA People Power Anniversary", type: "Special Non-Working" },
+        { date: "2025-04-17", name: "Maundy Thursday", type: "Regular Holiday" },
+        { date: "2025-04-18", name: "Good Friday", type: "Regular Holiday" },
+        { date: "2025-04-19", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2025-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2025-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2025-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2025-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2025-08-25", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2025-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2025-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2025-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2025-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2025-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ],
+
+    2026: [
+        { date: "2026-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2026-04-02", name: "Maundy Thursday", type: "Regular Holiday" },
+        { date: "2026-04-03", name: "Good Friday", type: "Regular Holiday" },
+        { date: "2026-04-04", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2026-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2026-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2026-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2026-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2026-08-31", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2026-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2026-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2026-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2026-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2026-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ],
+
+    2027: [
+        { date: "2027-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2027-03-25", name: "Maundy Thursday", type: "Regular" },
+        { date: "2027-03-26", name: "Good Friday", type: "Regular" },
+        { date: "2027-03-27", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2027-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2027-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2027-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2027-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2027-08-30", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2027-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2027-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2027-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2027-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2027-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ],
+
+    2028: [
+        { date: "2028-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2028-04-13", name: "Maundy Thursday", type: "Regular Holiday" },
+        { date: "2028-04-14", name: "Good Friday", type: "Regular Holiday" },
+        { date: "2028-04-15", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2028-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2028-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2028-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2028-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2028-08-28", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2028-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2028-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2028-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2028-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2028-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ],
+
+    2029: [
+        { date: "2029-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2029-03-29", name: "Maundy Thursday", type: "Regular Holiday" },
+        { date: "2029-03-30", name: "Good Friday", type: "Regular Holiday" },
+        { date: "2029-03-31", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2029-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2029-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2029-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2029-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2029-08-27", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2029-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2029-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2029-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2029-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2029-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ],
+
+    2030: [
+        { date: "2030-01-01", name: "New Year’s Day", type: "Regular Holiday" },
+        { date: "2030-04-18", name: "Maundy Thursday", type: "Regular Holiday" },
+        { date: "2030-04-19", name: "Good Friday", type: "Regular Holiday" },
+        { date: "2030-04-20", name: "Black Saturday", type: "Special Non-Working" },
+        { date: "2030-04-09", name: "Araw ng Kagitingan", type: "Regular Holiday" },
+        { date: "2030-05-01", name: "Labor Day", type: "Regular Holiday" },
+        { date: "2030-06-12", name: "Independence Day", type: "Regular Holiday" },
+        { date: "2030-08-21", name: "Ninoy Aquino Day", type: "Special Non-Working" },
+        { date: "2030-08-26", name: "National Heroes Day", type: "Regular Holiday" },
+        { date: "2030-11-01", name: "All Saints’ Day", type: "Special Non-Working" },
+        { date: "2030-11-02", name: "All Souls’ Day", type: "Special Non-Working" },
+        { date: "2030-11-30", name: "Bonifacio Day", type: "Regular Holiday" },
+        { date: "2030-12-25", name: "Christmas Day", type: "Regular Holiday" },
+        { date: "2030-12-30", name: "Rizal Day", type: "Regular Holiday" }
+    ]
+};
+
+let currentYear = new Date().getFullYear();
+
+function renderHolidays() {
+    const wrap = document.getElementById("holidayWidget");
+    const list = PH_HOLIDAYS[currentYear];
+
+    wrap.innerHTML = `
+        <div class='hw-header'>
+            <button class='hw-btn' onclick='changeYear(-1)'>&lt; Prev</button>
+            <h2>Philippine Holidays ${currentYear}</h2>
+            <button class='hw-btn' onclick='changeYear(1)'>Next &gt;</button>
+        </div>
+    `;
+
+    if (!list) {
+        wrap.innerHTML += "<p>No data for this year.</p>";
+        return;
+    }
+
+    list.forEach(h => {
+        wrap.innerHTML += `
+            <div class='hw-item'>
+                <div>
+                    <div class='hw-name'>${h.name}</div>
+                    <div class='hw-type'>${h.type}</div>
+                </div>
+                <div>${new Date(h.date).toLocaleDateString()}</div>
+            </div>
+        `;
+    });
+}
+
+function changeYear(step) {
+    currentYear += step;
+    if (!PH_HOLIDAYS[currentYear]) currentYear -= step;
+    renderHolidays();
+}
+
+renderHolidays();
+</script>

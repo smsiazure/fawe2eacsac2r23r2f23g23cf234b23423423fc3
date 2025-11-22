@@ -50,6 +50,7 @@
     padding: 10px;
     background: #fff;
     border-top: 1px solid #ccc;
+    gap: 8px;
   }
   #userInput {
     flex: 1;
@@ -58,7 +59,6 @@
     border-radius: 5px;
   }
   button {
-    margin-left: 8px;
     padding: 10px 15px;
     border: none;
     background: #545454;
@@ -80,12 +80,14 @@
 <div id="inputArea">
   <input type="number" id="userInput" placeholder="Enter number..." autofocus>
   <button onclick="sendMsg()">Send</button>
+  <button onclick="sendSpecial('back')">Back</button>
+  <button onclick="sendSpecial('home')">Home</button>
 </div>
 
 <script>
 const chatBox = document.getElementById("chat");
 
-// 🔹 Simulated typing delay based on word count
+// Typing delay based on length
 function getTypingDelay(wordCount) {
   if (wordCount <= 50) return 800;
   if (wordCount <= 100) return 1200;
@@ -93,7 +95,7 @@ function getTypingDelay(wordCount) {
   return 2500;
 }
 
-// 🔹 Display "Bot is typing..." then show message
+// Display "Bot is typing..."
 function simulateBotResponse(text, isHTML = false) {
   const wordCount = text.replace(/<[^>]*>/g, "").trim().split(/\s+/).length;
   const delay = getTypingDelay(wordCount);
@@ -110,7 +112,7 @@ function simulateBotResponse(text, isHTML = false) {
   }, delay);
 }
 
-// 🔹 Append message to chat
+// Append message
 function appendMessage(sender, message, isHTML = false) {
   const msg = document.createElement("div");
   msg.className = "msg " + sender;
@@ -139,63 +141,60 @@ const menu = {
         title: "🧹 Daily Cleaning Tasks",
         options: { 1: "Guest Rooms", 2: "Public Areas", 3: "Restrooms" },
         branches: {
-          1: { message: "Clean guest rooms:\n- Make beds\n- Replace linens\n- Vacuum floors\n\n99. Back\n0. Main Menu" },
-          2: { message: "Clean public areas:\n- Lobby\n- Hallways\n- Elevators\n\n99. Back\n0. Main Menu" },
-          3: { message: "Clean restrooms:\n- Sanitize sinks & toilets\n- Refill supplies\n- Sweep & mop floors\n\n99. Back\n0. Main Menu" }
+          1: { message: "Clean guest rooms:\n- Make beds\n- Replace linens\n- Vacuum floors\n\n" },
+          2: { message: "Clean public areas:\n- Lobby\n- Hallways\n- Elevators\n\n" },
+          3: { message: "Clean restrooms:\n- Sanitize sinks & toilets\n- Refill supplies\n- Sweep & mop floors\n\n" }
         }
       },
       2: {
         title: "📦 Inventory Management",
         options: { 1: "Check Stock", 2: "Request Supplies" },
         branches: {
-          1: { message: "Current stock levels:\n- Linens\n- Toiletries\n- Cleaning Chemicals\n\n99. Back\n0. Main Menu" },
-          2: { message: 'Request new supplies:\n<a href="https://intranet/hk/supplies-request" target="_blank">Submit Request</a>\n\n99. Back\n0. Main Menu' }
+          1: { message: "Current stock levels:\n- Linens\n- Toiletries\n- Cleaning Chemicals\n\n" },
+          2: { message: 'Request new supplies:\n<a href="https://intranet/hk/supplies-request" target="_blank">Submit Request</a>\n\n' }
         }
       },
       3: {
         title: "🛠 Maintenance Requests",
         options: { 1: "Report Issue", 2: "View Status" },
         branches: {
-          1: { message: 'Report an issue:\n<a href="https://intranet/hk/maintenance" target="_blank">Submit Maintenance Request</a>\n\n99. Back\n0. Main Menu' },
-          2: { message: "View status of reported issues:\n- Pending\n- In Progress\n- Completed\n\n99. Back\n0. Main Menu" }
+          1: { message: 'Report an issue:\n<a href="https://intranet/hk/maintenance" target="_blank">Submit Maintenance Request</a>\n\n' },
+          2: { message: "View status of reported issues:\n- Pending\n- In Progress\n- Completed\n\n" }
         }
       },
       4: {
         title: "⏰ Shift Schedule",
         options: { 1: "View My Schedule", 2: "Swap Shifts" },
         branches: {
-          1: { message: 'View schedule:\n<a href="https://intranet/hk/schedule" target="_blank">My Shifts</a>\n\n99. Back\n0. Main Menu' },
-          2: { message: "Swap shifts:\n- Request swap with colleague\n- Supervisor approval required\n\n99. Back\n0. Main Menu" }
+          1: { message: 'View schedule:\n<a href="https://intranet/hk/schedule" target="_blank">My Shifts</a>\n\n' },
+          2: { message: "Swap shifts:\n- Request swap with colleague\n- Supervisor approval required\n\n" }
         }
       },
       5: {
         title: "📄 Reports & Logs",
         options: { 1: "Daily Cleaning Logs", 2: "Incident Reports" },
         branches: {
-          1: { message: 'Access daily cleaning logs:\n<a href="https://intranet/hk/logs" target="_blank">View Logs</a>\n\n99. Back\n0. Main Menu' },
-          2: { message: 'Submit an incident report:\n<a href="https://intranet/hk/incidents" target="_blank">Report Incident</a>\n\n99. Back\n0. Main Menu' }
+          1: { message: 'Access daily cleaning logs:\n<a href="https://intranet/hk/logs" target="_blank">View Logs</a>\n\n' },
+          2: { message: 'Submit an incident report:\n<a href="https://intranet/hk/incidents" target="_blank">Report Incident</a>\n\n' }
         }
       },
       6: {
         title: "📚 Training & Guidelines",
         options: { 1: "Safety Guidelines", 2: "Training Videos" },
         branches: {
-          1: { message: 'Safety Guidelines:\n<a href="https://intranet/hk/safety" target="_blank">Read Guidelines</a>\n\n99. Back\n0. Main Menu' },
-          2: { message: 'Training Videos:\n<a href="https://intranet/hk/training" target="_blank">Watch Videos</a>\n\n99. Back\n0. Main Menu' }
+          1: { message: 'Safety Guidelines:\n<a href="https://intranet/hk/safety" target="_blank">Read Guidelines</a>\n\n' },
+          2: { message: 'Training Videos:\n<a href="https://intranet/hk/training" target="_blank">Watch Videos</a>\n\n' }
         }
       },
       7: {
         title: "📞 Help / Contacts",
         options: { 1: "Supervisor Contact", 2: "IT Support", 3: "HR / Admin" },
         branches: {
-          1: { message: 'Contact Supervisor:\n<a href="mailto:supervisor@hotel.com">Email Supervisor</a>\n\n99. Back\n0. Main Menu' },
-          2: { message: 'Contact IT Support:\n<a href="mailto:itsupport@hotel.com">Email IT Support</a>\n\n99. Back\n0. Main Menu' },
-          3: { message: 'Contact HR / Admin:\n<a href="mailto:hr@hotel.com">Email HR</a>\n\n99. Back\n0. Main Menu' }
+          1: { message: 'Contact Supervisor:\n<a href="mailto:supervisor@hotel.com">Email Supervisor</a>\n\n' },
+          2: { message: 'Contact IT Support:\n<a href="mailto:itsupport@hotel.com">Email IT Support</a>\n\n' },
+          3: { message: 'Contact HR / Admin:\n<a href="mailto:hr@hotel.com">Email HR</a>\n\n' }
         }
       },
-      8: "Emergency Contacts"
-    },
-    branches: {
       8: {
         title: `<b>📞 National Emergency Hotlines</b>
 - Emergency Hotline: <a href="tel:911">911</a>
@@ -229,9 +228,7 @@ const menu = {
 - Barangay Marcelo Green: <a href="tel:+6288263540">(02) 8826-3540</a>
 - Barangay San Martin de Porres: <a href="tel:+6288263542">(02) 8826-3542</a>
 - Barangay Don Galo: <a href="tel:+6288263545">(02) 8826-3545</a>
-
-99. Back
-0. Main Menu`, isHTML: true },
+`, isHTML: true },
           2: { message: `<b>Hospitals & Medical Facilities</b>
 - Ospital ng Parañaque I: <a href="tel:+6288263511">(02) 8826-3511</a>
 - Ospital ng Parañaque II: <a href="tel:+6288263512">(02) 8826-3512</a>
@@ -243,9 +240,7 @@ const menu = {
 - Perpetual Help Medical Center – Las Piñas: <a href="tel:+6288724342">(02) 8872-4342</a>
 - Asian Hospital and Medical Center: <a href="tel:+6287719000">(02) 8771-9000</a>
 - Las Piñas Doctors Hospital: <a href="tel:+6288730661">(02) 8873-0661</a>
-
-99. Back
-0. Main Menu`, isHTML: true },
+`, isHTML: true },
           3: { message: `<b>Utilities & Other Emergency Contacts</b>
 - Meralco Hotline: <a href="tel:16211">16211</a>
 - Maynilad Water Hotline: <a href="tel:1626">1626</a>
@@ -253,14 +248,13 @@ const menu = {
 - PLDT Hotline: <a href="tel:171">171</a>
 - Globe Hotline: <a href="tel:211">211</a> or <a href="tel:+6277301000">(02) 7730-1000</a>
 - Smart Hotline: <a href="tel:*888">*888</a> or <a href="tel:+6288488878">(02) 8848-8878</a>
-
-99. Back
-0. Main Menu`, isHTML: true }
+`, isHTML: true }
         }
       }
     }
   }
 };
+
 // ---------------- CHAT LOGIC ----------------
 let currentMenu = menu.main;
 let menuStack = [menu.main];
@@ -268,8 +262,23 @@ let menuStack = [menu.main];
 function showMenu(menuNode) {
   let text = `🤖 ${menuNode.title}\n\n`;
   for (const [key, val] of Object.entries(menuNode.options)) text += `${key}. ${val}\n`;
-  text += `\n99. Back\n0. Main Menu`;
   simulateBotResponse(text, true);
+}
+
+function sendSpecial(action) {
+  if (action === "home") {
+    currentMenu = menu.main;
+    menuStack = [menu.main];
+    showMenu(currentMenu);
+  } else if (action === "back") {
+    if (menuStack.length > 1) {
+      menuStack.pop();
+      currentMenu = menuStack[menuStack.length - 1];
+      showMenu(currentMenu);
+    } else {
+      showMenu(menu.main);
+    }
+  }
 }
 
 function sendMsg() {
@@ -280,22 +289,6 @@ function sendMsg() {
   input.value = "";
 
   const code = userText.toLowerCase();
-
-  if (code === "0") {
-    currentMenu = menu.main;
-    menuStack = [menu.main];
-    showMenu(currentMenu);
-    return;
-  }
-
-  if (code === "99") {
-    if (menuStack.length > 1) {
-      menuStack.pop();
-      currentMenu = menuStack[menuStack.length - 1];
-      showMenu(currentMenu);
-    } else showMenu(menu.main);
-    return;
-  }
 
   if (currentMenu.branches && currentMenu.branches[code]) {
     currentMenu = currentMenu.branches[code];
@@ -312,4 +305,3 @@ window.onload = () => showMenu(menu.main);
 </script>
 </body>
 </html>
-
