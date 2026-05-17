@@ -36,10 +36,10 @@
 <div class="header">
 
 <div class="header-left active">
-<a href="index.html" class="logo" style="cursor: default;">
+<a href="dashboard.html" class="logo" style="cursor: default;">
 <img src="assets/img/sms.png" alt="">
 </a>
-<a href="index.html" class="logo-small" style="cursor: default;">
+<a href="dashboard.html" class="logo-small" style="cursor: default;">
 <img src="assets/img/sms.png" alt="">
 </a>
 <div id="date-time">Loading...</div>
@@ -67,35 +67,38 @@
 <br>
 
 <li class="submenu">
-<a onclick="location.href='index.html';"><img src="assets/img/icons/dashboard.png" alt="img "><span>&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</span></a>
+<a onclick="location.href='dashboard.html';"><img src="assets/img/icons/about.png" alt="img "><span>&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</span></a>
 </li>
 
 <li class="submenu">
-<a onclick="location.href='profile.html';"><img src="assets/img/icons/profile.png" alt="img"><span>&nbsp;&nbsp;&nbsp;&nbsp;Profile</span></a>
+<a href="javascript:void(0);"><img src="assets/img/icons/roster.png" alt="img"><span> &nbsp;&nbsp;&nbsp;&nbsp;Staff Roster</span> <span class="menu-arrow"></span></a>
+<ul>
+<li><a href="sarform.html">Schedule Adjustment Request Form</a></li>
+<li><a href="sarlist.html">Schedule Adjustment Request List</a></li>
+<li><a href="leavecalendar.html">Leave Calendar</a></li>
+</ul>
+</li>
+
+<li class="submenu">
+<a href="javascript:void(0);"><img src="assets/img/icons/printables.png" alt="img"><span> &nbsp;&nbsp;&nbsp;&nbsp;Printables</span> <span class="menu-arrow"></span></a>
+<ul>
+<li><a href="smsforms.html">SMS Forms</a></li>
+<li><a href="azureforms.html">Azure Forms</a></li>
+</ul>
 </li>
 
 <li class="submenu">
 <a href="javascript:void(0);"><img src="assets/img/icons/hub.png" alt="img"><span> &nbsp;&nbsp;&nbsp;&nbsp;Hub</span> <span class="menu-arrow"></span></a>
 <ul>
-<li><a href="schedule.html">Schedule</a></li>
-<li><a href="leave.html">Leave Calendar</a></li>
-<li><a href="changeschedule.html">Change Schedule Listing</a></li>
-<li><a href="changeschedulerequest.html">Request Change Schedule</a></li>
-<li><a href="smsforms.html">SMS Forms</a></li>
-<li><a href="azureforms.html">AZURE Forms</a></li>
-<li><a href="holiday.html">Holiday Checker</a></li>
+<li><a href="salary.html">Salary Calculator</a></li>
 <li><a href="traffic.html">Traffic Monitor</a></li>
 <li><a href="weather.html">Weather Forecast</a></li>
-<li><a href="Earthquake.html">Earthquake Tracker</a></li>
-<li><a href="emergency.html" class="active">Emergency Contacts</a></li>
+<li><a href="earthquake.html">Earthquake Tracker</a></li>
+<li><a href="emergency.html">Emergency Contacts</a></li>
 </ul>
 </li>
 
-<li class="submenu">
-<a onclick="location.href='settings.html';"><img src="assets/img/icons/settings.png" alt="img"><span>&nbsp;&nbsp;&nbsp;&nbsp;Settings</span></a>
-</li>
-
-<img src="assets/img/seperator.png" alt="img" style="width: 100%;"
+<img src="assets/img/seperator.png" alt="img" style="width: 100%;">
 </ul>
 <div style="bottom: 10px;left: 10px;  position: relative;">
 <img src="assets/img/logo.png" alt="img" style="width: 20vw;">
@@ -106,13 +109,16 @@
 </div>
 </div>
 
-  <div class="page-wrapper">
-
-  <iframe src="elements/greenwaves.htm" 
+<div class="page-wrapper">
+  
+  <iframe src="assets\plugins\greenwaves.html" 
           style="position: absolute; top: 0px; left: 0; width: 100vw; height: 100vh; z-index: 0; border: none;">
   </iframe>
-    <iframe src="elements/emergency.html" style="width: 100vw; height: 93vh;position: relative; z-index: 1;" frameborder=0></iframe>
-  </div>
+  </iframe>
+  <iframe src="elements\emergency.html"  loading="lazy" style="position: relative; z-index: 1; width: 100vw; height: 90vh; border: none;padding-bottom:-10px;">
+  </iframe>
+
+</div>
 
 <script src="assets/js/jquery-3.6.0.min.js"></script>
 <script src="assets/js/feather.min.js"></script>
@@ -120,6 +126,5 @@
 <script src="assets/js/jquery.slimscroll.min.js"></script>
 <script src="assets/js/script.js"></script>
 <script src="assets/js/datetime.js"></script>
-
 </body>
 </html>
