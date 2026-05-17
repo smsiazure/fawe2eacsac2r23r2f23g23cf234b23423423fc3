@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professional Salary Calculator</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:30px;
+      color:#000;
+    }
+
+    .container{
+      width:100%;
+      max-width:950px;
+      background:#f0f0f0;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 20px 50px rgba(0,0,0,0.4);
+    }
+
+    .header{
+      color:#000;
+      padding:25px;
+    }
+
+    .header h1{
+      font-size:32px;
+      font-weight:700;
+      margin-bottom:5px;
+    }
+
+    .header p{
+      opacity:0.9;
+      font-size:14px;
+    }
+
+    .content{
+      padding:30px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+      gap:20px;
+      margin-bottom:30px;
+    }
+
+    .input-group{
+      background:#fff;
+      padding:18px;
+      border-radius:14px;
+      border:0px solid #374151;
+      transition:0.3s;
+    }
+
+    .input-group:hover{
+      border-color:#000;
+      transform:translateY(-2px);
+    }
+
+    .input-group label{
+      display:block;
+      margin-bottom:10px;
+      font-size:14px;
+      color:#000;
+    }
+
+    .input-group input{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      background:#0f172a;
+      color:white;
+      font-size:16px;
+      outline:none;
+      border:1px solid #334155;
+    }
+
+    .input-group input:focus{
+      border-color:#3b82f6;
+    }
+
+    .section-title{
+      margin:25px 0 15px;
+      font-size:20px;
+      font-weight:600;
+      color:#60a5fa;
+    }
+
+    button{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(135deg, #2563eb, #3b82f6);
+      color:white;
+      font-size:18px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+      margin-top:10px;
+    }
+
+    button:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 20px rgba(37,99,235,0.35);
+    }
+
+    .results{
+      margin-top:35px;
+      background:#fff;
+      border-radius:18px;
+      padding:25px;
+      border:1px solid #334155;
+    }
+
+    .results h2{
+      margin-bottom:20px;
+      color:#60a5fa;
+    }
+
+    .result-row{
+      display:flex;
+      justify-content:space-between;
+      padding:12px 0;
+      border-bottom:1px solid #1e293b;
+      font-size:15px;
+    }
+
+    .result-row:last-child{
+      border-bottom:none;
+    }
+
+    .total{
+      margin-top:15px;
+      padding-top:15px;
+      border-top:2px solid #3b82f6;
+      font-size:24px;
+      font-weight:bold;
+      color:#4ade80;
+    }
+
+    .note{
+      margin-top:20px;
+      font-size:13px;
+      color:#94a3b8;
+      line-height:1.6;
+    }
+
+    @media(max-width:600px){
+      .header h1{
+        font-size:24px;
+      }
+
+      .content{
+        padding:20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>Salary Calculator</h1>
+      <p>Compute employee salary, overtime, holidays, and deductions professionally.</p>
+    </div>
+
+    <div class="content">
+
+      <div class="section-title">Basic Information</div>
+
+      <div class="grid">
+
+    <div class="input-group">
+      <label>Daily Rate (₱)</label>
+      <input type="number" id="dailyRate" value="695">
+    </div>
+
+        <div class="input-group">
+          <label>Total Regular Hours</label>
+          <input type="number" id="regularHours" value="">
+        </div>
+
+        <div class="input-group">
+          <label>Total Lates (Hours)</label>
+          <input type="number" id="lates" value="">
+        </div>
+
+      </div>
+
+      <div class="section-title">Additional Earnings</div>
+
+      <div class="grid">
+
+        <div class="input-group">
+          <label>Total Overtime Hours</label>
+          <input type="number" id="otHours" value="">
+        </div>
+
+        <div class="input-group">
+          <label>Total Night Differential Hours</label>
+          <input type="number" id="ndHours" value="">
+        </div>
+
+        <div class="input-group">
+          <label>Total Regular Holiday Hours</label>
+          <input type="number" id="regularHoliday" value="">
+        </div>
+
+        <div class="input-group">
+          <label>Total Special Holiday Hours</label>
+          <input type="number" id="specialHoliday" value="">
+        </div>
+
+      </div>
+
+      <button onclick="calc()">Calculate</button>
+
+      <div class="results">
+
+        <h2>Salary Breakdown</h2>
+
+        <div class="result-row">
+          <span>Regular Pay</span>
+          <span id="regularPay">₱0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>Late Deduction</span>
+          <span id="lateDeduction">₱0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>Overtime Pay (125%)</span>
+          <span id="otPay">₱0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>Night Differential Pay (10%)</span>
+          <span id="ndPay">₱0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>Regular Holiday Pay (200%)</span>
+          <span id="regularHolidayPay">₱0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>Special Holiday Pay (130%)</span>
+          <span id="specialHolidayPay">₱0.00</span>
+        </div>
+
+        <div class="result-row total">
+          <span>NET SALARY</span>
+          <span id="netSalary">₱0.00</span>
+        </div>
+
+        <div class="note">
+          <strong>Calculation Rules:</strong><br>
+          • Overtime = 125% of hourly rate<br>
+          • Night Differential = additional 10% per hour<br>
+          • Regular Holiday = 200% pay<br>
+          • Special Holiday = 130% pay
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+<script>
+function money(v){
+  return "₱" + v.toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function calc(){
+
+  const daily = parseFloat(document.getElementById("dailyRate").value) || 0;
+  const hr = daily / 8;
+
+  const regH = parseFloat(document.getElementById("regularHours").value) || 0;
+  const lateH = parseFloat(document.getElementById("lates").value) || 0;
+  const otH = parseFloat(document.getElementById("otHours").value) || 0;
+  const ndH = parseFloat(document.getElementById("ndHours").value) || 0;
+  const rhH = parseFloat(document.getElementById("regularHoliday").value) || 0;
+  const shH = parseFloat(document.getElementById("specialHoliday").value) || 0;
+
+  const regPay = regH * hr;
+  const lateDed = lateH * hr;
+  const otPay = otH * hr * 1.25;
+  const ndPay = ndH * hr * 0.10;
+  const rhPay = rhH * hr * 2;
+  const shPay = shH * hr * 1.3;
+
+  const net = regPay - lateDed + otPay + ndPay + rhPay + shPay;
+
+  document.getElementById("regularPay").textContent = money(regPay);
+  document.getElementById("lateDeduction").textContent = money(lateDed);
+  document.getElementById("otPay").textContent = money(otPay);
+  document.getElementById("ndPay").textContent = money(ndPay);
+  document.getElementById("regularHolidayPay").textContent = money(rhPay);
+  document.getElementById("specialHolidayPay").textContent = money(shPay);
+  document.getElementById("netSalary").textContent = money(net);
+}
+</script>
+
+</body>
+</html>

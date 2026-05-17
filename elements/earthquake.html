@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PH Earthquake Tracker</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin:0; font-family: system-ui, sans-serif; background:transparent; }
+    #tracker { display:flex; max-width: 100vw; margin: 10px auto; gap:12px; }
+    #map { flex:1; height: 100vh; border:1px solid #ccc; border-radius:8px; }
+    .panel { flex:1; padding:10px; background:#fff; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1); max-width: 20vw; }
+    .quake { margin-bottom:8px; padding:6px; border-bottom:1px solid #ddd; cursor:pointer; }
+    .quake:hover { background: #eef; }
+    .mag { font-weight:bold; }
+    .small { font-size:12px; color:#555; }
+    .controls { margin-bottom: 8px; }
+    .btn { padding:4px 8px; margin-right:4px; cursor:pointer; background:#007bff; color:#fff; border:none; border-radius:4px; }
+  </style>
+</head>
+<body>
+  <div id="tracker">
+    <div id="map"></div>
+    <div class="panel">
+      <div class="controls">
+        <button class="btn" id="feedHour">Past Hour</button>
+        <button class="btn" id="feedDay">Past Day</button>
+        <button class="btn" id="feedWeek">Past 7 Days</button>
+        <button class="btn" id="refreshNow">Refresh</button>
+      </div>
+      <div id="quakeList"></div>
+      <div class="small" id="lastUpdate">—</div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const FEED_BASE = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary';
+    let feed = 'all_day'; // default
+    const POLL_MS = 60 * 1000;
+
+    const map = L.map('map').setView([12.8797, 121.7740], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let quakeLayer = L.layerGroup().addTo(map);
+
+    function magColor(m) {
+      if (m >= 5) return '#ff4d4d';
+      if (m >= 3) return '#ffcc00';
+      return '#3399ff';
+    }
+    function magRadius(m) {
+      return Math.max(4, m * 3);
+    }
+
+    function fmtTime(ms) {
+      const d = new Date(ms);
+      return d.toLocaleString();
+    }
+
+    function inPhilippines(lat, lon) {
+      // Rough bounding box for PH:
+      // lat ~ 4°N to 22°N, lon ~ 115°E to 130°E
+      return lat >= 4 && lat <= 22 && lon >= 115 && lon <= 130;
+    }
+
+    async function fetchAndRender() {
+      const url = `${FEED_BASE}/${feed}.geojson`;
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        const data = await res.json();
+        renderQuakes(data);
+        document.getElementById('lastUpdate').textContent = 'Updated: ' + fmtTime(Date.now());
+      } catch (e) {
+        console.error('Error fetching quakes', e);
+        document.getElementById('lastUpdate').textContent = 'Error loading data';
+      }
+    }
+
+    function renderQuakes(geojson) {
+      quakeLayer.clearLayers();
+      const listEl = document.getElementById('quakeList');
+      listEl.innerHTML = '';
+
+      const features = geojson.features || [];
+      const filtered = features.filter(f => {
+        const coords = f.geometry.coordinates;
+        const lon = coords[0], lat = coords[1];
+        return inPhilippines(lat, lon);
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<div class="small">No recent earthquakes in PH from this feed.</div>';
+        return;
+      }
+
+      filtered.sort((a, b) => b.properties.time - a.properties.time);
+
+      filtered.forEach(f => {
+        const p = f.properties;
+        const [lon, lat, depth] = f.geometry.coordinates;
+        const mag = p.mag || 0;
+
+        const marker = L.circleMarker([lat, lon], {
+          radius: magRadius(mag),
+          fillColor: magColor(mag),
+          color: '#00000060',
+          weight: 0.6,
+          fillOpacity: 0.8
+        }).addTo(quakeLayer);
+
+        const popup = `
+          <strong>${p.place}</strong><br>
+          Mag: ${mag}<br>
+          Depth: ${depth} km<br>
+          Time: ${fmtTime(p.time)}<br>
+          <a href="${p.url}" target="_blank">Details</a>
+        `;
+        marker.bindPopup(popup);
+
+        const li = document.createElement('div');
+        li.className = 'quake';
+        li.innerHTML = `
+          <div>${p.place}</div>
+          <div class="mag">${mag.toFixed(1)}</div>
+          <div class="small">${fmtTime(p.time)}</div>
+        `;
+        li.onclick = () => {
+          map.setView([lat, lon], 6);
+          marker.openPopup();
+        };
+        listEl.appendChild(li);
+      });
+
+      if (quakeLayer.getBounds().isValid()) {
+        map.fitBounds(quakeLayer.getBounds().pad(0.3));
+      }
+    }
+
+    document.getElementById('feedHour').addEventListener('click', () => { feed = 'all_hour'; fetchAndRender(); });
+    document.getElementById('feedDay').addEventListener('click', () => { feed = 'all_day'; fetchAndRender(); });
+    document.getElementById('feedWeek').addEventListener('click', () => { feed = 'all_week'; fetchAndRender(); });
+    document.getElementById('refreshNow').addEventListener('click', fetchAndRender);
+
+    fetchAndRender();
+    setInterval(fetchAndRender, POLL_MS);
+
+  </script>
+</body>
+</html>
