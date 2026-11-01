@@ -118,6 +118,109 @@
   <iframe src="assets\plugins\greenwaves.html" 
           style="position: absolute; top: 0px; left: 0; width: 100vw; height: 100vh; z-index: 0; border: none;">
   </iframe>
+    <style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        font-family: 'cooper', sans-serif;
+    }
+
+.marquee {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 20px 0;
+    background: #000000 !important;
+    border-top: 2px solid #ff00ff;
+    border-bottom: 2px solid #00ffff;
+    box-shadow: 0 0 20px #ff00ff;
+}
+
+.track {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    background: transparent;
+    animation: scroll 16s linear infinite;
+}
+
+    .message {
+        display: inline-flex;
+        align-items: center;
+        font-size: 38px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        padding-right: 40px;
+    }
+
+    .message span {
+        display: inline-block;
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    .message span:nth-child(6n+1) { color: #ff00ff; }
+    .message span:nth-child(6n+2) { color: #00ffff; }
+    .message span:nth-child(6n+3) { color: #ffff00; }
+    .message span:nth-child(6n+4) { color: #00ff66; }
+    .message span:nth-child(6n+5) { color: #ff6600; }
+    .message span:nth-child(6n+6) { color: #b366ff; }
+
+    .emoji {
+        font-size: 38px;
+        display: inline-block;
+        animation: bounce 0.7s ease-in-out infinite alternate;
+        margin: 0 15px;
+    }
+
+    @keyframes scroll {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+
+    @keyframes glow {
+        from { text-shadow: 0 0 5px currentColor; }
+        to { text-shadow: 0 0 10px currentColor, 0 0 25px currentColor; }
+    }
+
+    @keyframes bounce {
+        from { transform: translateY(-8px) rotate(-10deg); }
+        to { transform: translateY(8px) rotate(10deg); }
+    }
+</style>
+
+
+<div class="marquee">
+    <div class="track">
+
+        <div class="message">
+            <span class="emoji">🎂</span>
+            <span>H</span><span>A</span><span>P</span><span>P</span><span>Y</span>
+            <span>&nbsp;</span>
+            <span>B</span><span>I</span><span>R</span><span>T</span><span>H</span>
+            <span>D</span><span>A</span><span>Y</span>
+            <span class="emoji">🎉</span>
+            <span class="emoji">🎈</span>
+            <span class="emoji">✨</span>
+        </div>
+
+        <!-- Duplicate for seamless scrolling -->
+        <div class="message" aria-hidden="true">
+            <span class="emoji">🎂</span>
+            <span>H</span><span>A</span><span>P</span><span>P</span><span>Y</span>
+            <span>&nbsp;</span>
+            <span>B</span><span>I</span><span>R</span><span>T</span><span>H</span>
+            <span>D</span><span>A</span><span>Y</span>
+            <span class="emoji">🎉</span>
+            <span class="emoji">🎈</span>
+            <span class="emoji">✨</span>
+        </div>
+
+    </div>
+</div>
   <iframe src="https://docs.google.com/spreadsheets/d/1ZCpgQyByv0aNuZjF1XjuGHJVPPFnfJLxtJRUydPSrdQ/preview"  style="position: relative; z-index: 1; width: 100vw; height: 90vh; border: none;padding-bottom:-10px;">
   </iframe>
 
