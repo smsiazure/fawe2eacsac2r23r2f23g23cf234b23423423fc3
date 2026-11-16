@@ -140,7 +140,6 @@
   max-width: 850px;
   height: 65vh;
   padding: 5px;
-  margin-top: -50px;
   border-radius: 12px;
   text-align: center;
   position: relative;
@@ -166,9 +165,8 @@
 
 .sheet-frame {
   width: 100%;
-  height: calc(100% - 95px);
+  height: calc(100%);
   border: none;
-  margin-top: -80px;
 
 }
 </style>
@@ -180,30 +178,13 @@
     <button class="close-btn"
       onclick="nextPopup(1)">&times;</button>
 
-  <center><img src="assets/img/bdaybanner.png" alt="img" style="width: 70%;height:auto; z-index: 1;position: relative;max-width:700px;"></center>
-
     <iframe class="sheet-frame"
-      src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYh_Ks6lLhhHc5kWf-PZ-iPHc_6i-lSOo1HdBB_niYzr8-HsyoGLDFxrUEOgRdbkhIMEEApUmUuvtf/pubhtml?gid=133149295#gid=133149295&amp;single=true&amp;widget=true&amp;headers=false">
+      src="birthday.html">
     </iframe>
 
   </div>
 </div>
 
-
-<div id="popup2" class="popup" role="dialog"
-     aria-modal="true">
-
-  <div class="popup-content">
-
-    <button class="close-btn"
-      onclick="nextPopup(2)">&times;</button>
-
-  <center><img src="assets/img/bdaybanner.png" alt="img" style="width: 70%;height:auto; z-index: 1;position: relative;max-width:700px;"></center>
-
-    <iframe class="sheet-frame" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYh_Ks6lLhhHc5kWf-PZ-iPHc_6i-lSOo1HdBB_niYzr8-HsyoGLDFxrUEOgRdbkhIMEEApUmUuvtf/pubhtml?gid=248331639#gid=248331639&amp;single=true&amp;widget=true&amp;headers=false" ></iframe>
-
-  </div>
-</div>
 <script>
 
 // SHOW FIRST POPUP AUTOMATICALLY
@@ -218,11 +199,7 @@ function nextPopup(current) {
 
   if (current === 1) {
     document.getElementById("popup1").style.display = "none";
-    document.getElementById("popup2").style.display = "flex";
-  }
 
-  else if (current === 2) {
-    document.getElementById("popup2").style.display = "none";
   }
 
 }

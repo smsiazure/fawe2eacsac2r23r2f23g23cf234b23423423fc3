@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Birthday Celebrants</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: white;
+    background: linear-gradient(135deg, #111827, #202c49, #38254c);
+}
+
+header {
+    text-align: center;
+    padding: 35px 15px 25px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 46px);
+    color: #ffda83;
+}
+
+header p {
+    color: #cbd5e1;
+    margin: 10px 0;
+}
+
+#today {
+    font-size: 17px;
+    color: #fff;
+    margin-top: 15px;
+}
+
+#count {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 18px;
+    border-radius: 30px;
+    background: #ffffff18;
+    color: #ffda83;
+    font-size: 14px;
+}
+
+.gallery {
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 260px));
+    justify-content: center;
+    gap: 25px;
+}
+
+.card {
+    overflow: hidden;
+    border-radius: 18px;
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    text-align: center;
+    animation: appear .7s ease both;
+}
+
+.card img {
+    display: block;
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+    object-position: center top;
+    background: #30394d;
+}
+
+.card h2 {
+    margin: 17px 8px 5px;
+    font-size: 21px;
+    color: #ffda83;
+    text-transform: capitalize;
+}
+
+.card .message {
+    margin: 8px 5px 20px;
+    color: #e5e7eb;
+    font-size: 15px;
+}
+
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 65px 15px;
+    color: #cbd5e1;
+}
+
+.empty .icon {
+    font-size: 65px;
+    margin-bottom: 15px;
+}
+
+.empty h2 {
+    color: #ffda83;
+}
+
+footer {
+    padding: 35px 15px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media(max-width: 500px) {
+    .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .card img {
+        height: 210px;
+    }
+
+    .card h2 {
+        font-size: 16px;
+    }
+
+    .card .message {
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎂 Birthday Celebrants 🎉</h1>
+    <p>Celebrating the special people in our workplace</p>
+
+    <div id="today"></div>
+    <div id="count"></div>
+</header>
+
+<main class="gallery" id="gallery"></main>
+
+
+<script>
+
+
+const employees = [
+
+    { birthday: "8/28/1993", image: "aguado.webp" },
+    { birthday: "5/9/1993", image: "aguilando.webp" },
+    { birthday: "3/5/1998", image: "alcazar.webp" },
+    { birthday: "10/27/1971", image: "alicaway.webp" },
+    { birthday: "10/25/1997", image: "almario.webp" },
+    { birthday: "7/18/1982", image: "almazan.webp" },
+    { birthday: "4/11/1984", image: "altarejos.webp" },
+    { birthday: "7/8/1994", image: "ambiton.webp" },
+    { birthday: "9/26/2025", image: "arban.webp" },
+    { birthday: "2/14/1994", image: "arnibal.webp" },
+    { birthday: "7/25/1984", image: "atibagos.webp" },
+    { birthday: "3/8/1985", image: "bayate.webp" },
+    { birthday: "11/3/1978", image: "baydo.webp" },
+    { birthday: "9/8/1976", image: "binasoy.webp" },
+    { birthday: "2/20/1991", image: "broqueza.webp" },
+    { birthday: "9/25/1993", image: "cabaltierra.webp" },
+    { birthday: "6/2/1986", image: "cañete.webp" },
+    { birthday: "1/12/1993", image: "carumba.webp" },
+    { birthday: "3/25/1986", image: "dela cruz.webp" },
+    { birthday: "5/11/1996", image: "dingal.webp" },
+    { birthday: "8/3/1986", image: "dita.webp" },
+    { birthday: "9/14/1990", image: "dula.webp" },
+    { birthday: "11/7/2004", image: "endaya.webp" },
+    { birthday: "7/13/1992", image: "ermino.webp" },
+    { birthday: "1/24/1993", image: "espiritu.webp" },
+    { birthday: "5/1/1993", image: "fernandez jeff.webp" },
+    { birthday: "11/20/1975", image: "fernandez jenn.webp" },
+    { birthday: "9/4/2002", image: "ferrer.webp" },
+    { birthday: "11/1/1990", image: "flores.webp" },
+    { birthday: "5/28/1979", image: "galagar.webp" },
+    { birthday: "8/22/1994", image: "garnado.webp" },
+    { birthday: "11/16/1997", image: "gonzaga.webp" },
+    { birthday: "11/22/1993", image: "gonzales.webp" },
+    { birthday: "7/12/1994", image: "junio.webp" },
+    { birthday: "3/22/1988", image: "ladao.webp" },
+    { birthday: "12/2/1985", image: "latoy.webp" },
+    { birthday: "4/28/1991", image: "llurag.webp" },
+    { birthday: "4/29/1993", image: "lopez.webp" },
+    { birthday: "2/22/1996", image: "macabuhay.webp" },
+    { birthday: "7/7/1994", image: "malazaga.webp" },
+    { birthday: "12/16/1980", image: "manaog.webp" },
+    { birthday: "5/30/1990", image: "manlapao.webp" },
+    { birthday: "9/12/1979", image: "medalla.webp" },
+    { birthday: "4/7/1975", image: "mendoza.webp" },
+    { birthday: "11/16/2003", image: "moral.webp" },
+    { birthday: "4/11/2001", image: "morales.webp" },
+    { birthday: "9/1/1995", image: "morante.webp" },
+    { birthday: "4/12/1988", image: "obanil.webp" },
+    { birthday: "3/27/1976", image: "oro.webp" },
+    { birthday: "6/3/1990", image: "oronos.webp" },
+    { birthday: "9/13/1986", image: "pagulayan.webp" },
+    { birthday: "9/20/2026", image: "palacio.webp" },
+    { birthday: "10/25/1983", image: "paza.webp" },
+    { birthday: "8/24/1986", image: "pulga.webp" },
+    { birthday: "2/2/1975", image: "ramos.webp" },
+    { birthday: "6/22/1992", image: "reprado.webp" },
+    { birthday: "3/17/2001", image: "rollon.webp" },
+    { birthday: "8/5/1990", image: "saavedra.webp" },
+    { birthday: "5/23/2001", image: "sacueza.webp" },
+    { birthday: "8/6/1985", image: "sotto.webp" },
+    { birthday: "12/5/1978", image: "sulath.webp" },
+    { birthday: "3/30/1983", image: "tagura.webp" },
+    { birthday: "1/9/1988", image: "tanutan.webp" },
+    { birthday: "6/21/1977", image: "tena.webp" },
+    { birthday: "11/1/1992", image: "udtohan.webp" },
+    { birthday: "9/23/2000", image: "umpad.webp" },
+    { birthday: "6/22/1989", image: "urquiza.webp" },
+    { birthday: "5/4/1985", image: "villamor.webp" },
+    { birthday: "3/12/1984", image: "villanueva.webp" },
+    { birthday: "10/5/1978", image: "ydel.webp" },
+    { birthday: "1/12/1993", image: "yosores.webp" }
+
+];
+
+const now = new Date();
+
+const currentMonth = now.getMonth() + 1;
+const currentDay = now.getDate();
+
+const todayKey = `${currentMonth}/${currentDay}`;
+
+document.getElementById("today").textContent =
+    now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+
+
+const celebrants = employees.filter(person => {
+
+    const parts = person.birthday.split("/");
+    const month = Number(parts[0]);
+    const day = Number(parts[1]);
+
+    return `${month}/${day}` === todayKey;
+
+});
+
+
+document.getElementById("count").textContent =
+    `${celebrants.length} Celebrant${celebrants.length !== 1 ? "s" : ""} Today`;
+
+const gallery = document.getElementById("gallery");
+
+
+if (celebrants.length > 0) {
+
+    celebrants.forEach((person, index) => {
+
+        const name = person.image
+            .replace(/\.[^/.]+$/, "")
+            .replace(/[_-]/g, " ");
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.animationDelay = `${index * 0.15}s`;
+
+        const img = document.createElement("img");
+
+        img.src = "images/" + person.image;
+        img.alt = name;
+
+        img.onerror = function() {
+            this.style.display = "none";
+        };
+
+        const title = document.createElement("h2");
+
+        const message = document.createElement("p");
+
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(message);
+
+        gallery.appendChild(card);
+
+    });
+
+} else {
+
+    gallery.innerHTML = `
+        <div class="empty">
+            <div class="icon">🎁</div>
+            <h2>No Celebrants Today</h2>
+            <p>Let's wait for the next birthday celebration!</p>
+        </div>
+    `;
+
+}
+
+</script>
+
+</body>
+</html>
