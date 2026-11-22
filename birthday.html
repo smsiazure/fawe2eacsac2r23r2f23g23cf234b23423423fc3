@@ -94,6 +94,25 @@ header p {
     font-size: 15px;
 }
 
+.gallery.single-celebrant {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery.single-celebrant .card {
+    width: 100%;
+    max-width: 420px;
+}
+
+.gallery.single-celebrant .card img {
+    height: auto;
+    max-height: 550px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center top;
+}
+
 .empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -276,6 +295,10 @@ const gallery = document.getElementById("gallery");
 
 
 if (celebrants.length > 0) {
+
+    if (celebrants.length === 1) {
+        gallery.classList.add("single-celebrant");
+    }
 
     celebrants.forEach((person, index) => {
 
